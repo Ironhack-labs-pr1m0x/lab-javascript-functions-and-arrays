@@ -559,29 +559,93 @@ const sampleMatrix = [
   [1, 4, 3, 4, 5],
 ];
 
+//! 1 Read first 4 elements
+//! 2 Create Product (*) and save it in greatestSum
+//! 3 Delete first Element of the first 4 elements, (pop()) add the next element of the iteration
+//! 4 Create other sum with this new 4 numbers
+//! 5 Compare first Sum with second Sum
+//! 6 if second Sum is greater than overwrite the greatestSum
+
+const createProduct = (arr) => {
+  return arr.reduce(function (a, b) {
+    return a * b;
+  });
+};
+
 const greatestProduct = (matrix) => {
-  const greatestProduct = { sum: 0, matrix: [] };
+  let greatestProduct = { matrix: [], product: 0 };
 
   for (let i = 0; i < matrix.length; i++) {
-    const firstIteration = { sum: 1, matrix: [] };
-    // const followingIterations = { sum: 1, matrix: [] };
+    let currentIteration = { matrix: [], product: 0 };
+
     for (let k = 0; k < matrix.length; k++) {
-      if (k < 4) {
-        firstIteration.sum *= matrix[k][i];
-        firstIteration.matrix.push(matrix[k][i]);
-      } else {
-        const firstIterationC = { ...firstIteration };
-        firstIterationC.matrix.pop();
-        firstIterationC.matrix.push(matrix[k][i]);
+      // Setup first Matrix
+      if (k < 4 && currentIteration.product === 0) {
+        currentIteration.matrix.push(matrix[k][i]);
+      }
 
-        var result = firstIterationC.matrix.reduce(function (a, b) {
-          return a * b;
-        });
+      // Setup first Product
+      if (k === 4) {
+        currentIteration.product = createProduct(currentIteration.matrix);
+        // console.log(currentIteration);
+      }
 
-        console.log(result);
+      // After first Setup
+      if (currentIteration.product > 0) {
+        // Copy currentIteration Object for manipulation
+        let currentIterationC = { ...currentIteration };
+
+        // Delete first Element of Array
+        currentIterationC.matrix.shift();
+        currentIterationC.matrix.push(matrix[k][i]);
+
+        const newProduct = createProduct(currentIterationC.matrix);
+        currentIteration.product = newProduct;
+
+        if (currentIteration.product < currentIterationC.product) {
+          currentIteration = currentIterationC;
+        }
+
+        if (greatestProduct.product < currentIteration.product) {
+          greatestProduct = currentIteration;
+        }
       }
     }
-    console.log(firstIteration);
   }
+  setTimeout(() => {
+    console.log(greatestProduct);
+  }, 2000);
 };
+
+// const greatestProduct = (matrix) => {
+//   const greatestProduct = { sum: 0, matrix: [] };
+
+//   for (let i = 0; i < matrix.length; i++) {
+//     const firstIteration = { sum: 1, matrix: [] };
+//     // const followingIterations = { sum: 1, matrix: [] };
+//     for (let k = 0; k < matrix.length; k++) {
+//       if (k < 4) {
+//         firstIteration.matrix.push(matrix[k][i]);
+//         if (k === 3) {
+//           const newProduct = createProduct(firstIteration.matrix);
+//           if (firstIteration.sum < newProduct) {
+//             greatestProduct.sum = newProduct;
+//           }
+//         }
+//       } else {
+//         const firstIterationC = { ...firstIteration };
+//         firstIterationC.matrix.pop();
+//         firstIterationC.matrix.push(matrix[k][i]);
+
+//         var result = firstIterationC.matrix.reduce(function (a, b) {
+//           return a * b;
+//         });
+
+//         // console.log(result);
+//       }
+//     }
+//     console.log(firstIteration);
+//   }
+// };
+
 greatestProduct(sampleMatrix);
