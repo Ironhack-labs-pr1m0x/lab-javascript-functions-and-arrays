@@ -57,6 +57,7 @@ const sum = (mixedArr) => {
     if (typeof el === 'object') showError = true;
   });
 
+  //! Uncomment to throw error
   // if (showError) throw new Error("Unsupported data type sir or ma'am");
 
   let sum = 0;
